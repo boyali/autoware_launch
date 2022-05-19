@@ -107,16 +107,6 @@ def generate_launch_description():
     )
     add_launch_arg("use_intra_process", "true", "use ROS2 component container communication")
     add_launch_arg(
-        "container",
-        "/sensing/lidar/top/pointcloud_preprocessor/velodyne_node_container",
-        "container name",
-    )
-    add_launch_arg(
-        "input_sensor_points_topic",
-        "/sensing/lidar/top/rectified/pointcloud",
-        "input topic name for raw pointcloud",
-    )
-    add_launch_arg(
         "output_measurement_range_sensor_points_topic",
         "measurement_range/pointcloud",
         "output topic name for crop box filter",
