@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(communication_delay_compensator_launch)
+project(observers_launch)
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
