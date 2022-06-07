@@ -39,8 +39,8 @@ def launch_setup(context, *args, **kwargs):
     communication_delay_component = ComposableNode(
         package="communication_delay_compensator",
         plugin="autoware::motion::control::observer::CommunicationDelayCompensatorNode",
-        name="communication_delay_compensation_node",
-        namespace="trajectory_follower",
+        name="communication_delay_compensation_node_exe",
+        namespace="observer",
         # remappings=[
         #     ("~/input/current_trajectory", "/planning/scenario_planning/trajectory"),
         #     ("~/input/current_odometry", "/localization/kinematic_state"),
@@ -74,6 +74,7 @@ def launch_setup(context, *args, **kwargs):
         [
             PushRosNamespace("observer"),
             communication_delay_container,
+            communication_delay_compensator_loader,
 
         ]
     )
