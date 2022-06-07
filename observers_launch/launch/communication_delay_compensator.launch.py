@@ -32,7 +32,6 @@ import yaml
 
 def launch_setup(context, *args, **kwargs):
     communication_delay_compensator_path = LaunchConfiguration("communication_delay_compensator_path").perform(context)
-
     with open(communication_delay_compensator_path, "r") as f:
         communication_delay_compensator_param = yaml.safe_load(f)["/**"]["ros__parameters"]
 
