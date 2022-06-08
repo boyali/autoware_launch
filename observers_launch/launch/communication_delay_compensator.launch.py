@@ -39,8 +39,8 @@ def launch_setup(context, *args, **kwargs):
     communication_delay_component = ComposableNode(
         package="communication_delay_compensator",
         plugin="autoware::motion::control::observer::CommunicationDelayCompensatorNode",
-        name="communication_delay_compensation_node_exe",
-        namespace="observer",
+        name="communication_delay_compensator_exe",
+        namespace="observers",
         # remappings=[
         #     ("~/input/current_trajectory", "/planning/scenario_planning/trajectory"),
         #     ("~/input/current_odometry", "/localization/kinematic_state"),
@@ -61,13 +61,13 @@ def launch_setup(context, *args, **kwargs):
         package="rclcpp_components",
         executable=LaunchConfiguration("container_executable"),
         composable_node_descriptions=[],
-        condition=LaunchConfigurationEquals("communication_delay_compensation_mode", "CDOB"),
+        condition=LaunchConfigurationEquals("communication_delay_compensator_mode", "CDOB"),
     )
 
     communication_delay_compensator_loader = LoadComposableNodes(
         composable_node_descriptions=[communication_delay_component],
         target_container=communication_delay_container,
-        condition=LaunchConfigurationEquals("communication_delay_compensation_mode", "CDOB"),
+        condition=LaunchConfigurationEquals("communication_delay_compensator_mode", "CDOB"),
     )
 
     group = GroupAction(
@@ -92,9 +92,9 @@ def generate_launch_description():
 
     # communication delay compensation mode
     add_launch_arg(
-        "communication_delay_compensation_mode",
+        "communication_delay_compensator_mode",
         "CDOB",
-        "lateral communication_delay_compensation_mode: `CDOB` or `...`",
+        "communication_delay_compensator_mode: `CDOB` or `...`",
     )
 
     # parameter file path
