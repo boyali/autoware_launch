@@ -1,13 +1,13 @@
 <launch>
-  <!-- common parameters -->
-  <!-- <arg name="delay_compensator_mode" default="mpc_follower" description="options: ..., ..."/> -->
-  <arg name="communication_delay_compensator_path"
-       default="$(find-pkg-share observers_launch)/config/communication_delay_compensator/communication_delay_compensator.param.yaml"/>
+    <!-- common parameters -->
+    <!-- <arg name="delay_compensator_mode" default="mpc_follower" description="options: ..., ..."/> -->
+    <arg name="communication_delay_compensator_path"
+         default="$(find-pkg-share observers_launch)/config/communication_delay_compensator/communication_delay_compensator.param.yaml"/>
 
-  <!-- Communication Delay Observer Launch -->
-  <include
-    file="$(find-pkg-share observers_launch)/launch/communication_delay_compensator.launch.xml">
-    <arg name="communication_delay_compensator_path" value="$(var communication_delay_compensator_path)"/>
-  </include>
+    <!-- Communication Delay Observer Launch -->
+    <include
+            file="$(find-pkg-share observers_launch)/launch/communication_delay_compensator.launch.py">
+        <arg name="communication_delay_compensator_path" value="$(var communication_delay_compensator_path)"/>
+    </include>
 
 </launch>

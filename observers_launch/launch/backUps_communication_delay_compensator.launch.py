@@ -18,8 +18,7 @@ from launch.actions import GroupAction
 from launch.actions import IncludeLaunchDescription
 from launch.actions import OpaqueFunction
 from launch.actions import SetLaunchConfiguration
-from launch.conditions import IfCondition
-from launch.conditions import LaunchConfigurationEquals
+from launch.conditions import IfCondition, LaunchConfigurationEquals
 from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
@@ -36,37 +35,35 @@ def launch_setup(context, *args, **kwargs):
     with open(communication_delay_compensator_path, "r") as f:
         communication_delay_compensator_param = yaml.safe_load(f)["/**"]["ros__parameters"]
 
-    # lateral controller
+    # Communication Delay Compensator
     communication_delay_component = ComposableNode(
         package="communication_delay_compensator",
         plugin="autoware::motion::control::observer::CommunicationDelayCompensatorNode",
         name="communication_delay_compensator_exe",
         namespace="observers",
         # remappings=[
-        #     ("~/input/reference_trajectory", "/planning/scenario_planning/trajectory"),
+        #     ("~/input/current_trajectory", "/planning/scenario_planning/trajectory"),
         #     ("~/input/current_odometry", "/localization/kinematic_state"),
-        #     ("~/input/current_steering", "/vehicle/status/steering_status"),
-        #     ("~/output/control_cmd", "lateral/control_cmd"),
-        #     ("~/output/predicted_trajectory", "lateral/predicted_trajectory"),
-        #     ("~/output/diagnostic", "lateral/diagnostic"),
+        #     ("~/output/control_cmd", "longitudinal/control_cmd"),
+        #     ("~/output/slope_angle", "longitudinal/slope_angle"),
+        #     ("~/output/diagnostic", "longitudinal/diagnostic"),
         # ],
         parameters=[
             communication_delay_compensator_param,
         ],
         extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+
     )
 
-    # set container to run all required components in the same process
     communication_delay_container = ComposableNodeContainer(
         name="observer_container",
         namespace="",
         package="rclcpp_components",
         executable=LaunchConfiguration("container_executable"),
         composable_node_descriptions=[communication_delay_component],
-        condition=LaunchConfigurationEquals("lateral_controller_mode", "mpc_follower"),
+        condition=LaunchConfigurationEquals("communication_delay_compensator_mode", "CDOB"),
     )
 
-    # lateral controller is separated since it may be another controller (e.g. pure pursuit)
     communication_delay_compensator_loader = LoadComposableNodes(
         composable_node_descriptions=[communication_delay_component],
         target_container=communication_delay_container,
@@ -75,7 +72,9 @@ def launch_setup(context, *args, **kwargs):
 
     group = GroupAction(
         [
-            PushRosNamespace("control"),
+            PushRosNamespace("observer"),
+            communication_delay_container,
+            communication_delay_compensator_loader,
 
         ]
     )
@@ -98,6 +97,16 @@ def generate_launch_description():
         "communication_delay_compensator_mode: `CDOB` or `...`",
     )
 
+    # parameter file path
+    add_launch_arg(
+        "communication_delay_compensator_path",
+        [
+            FindPackageShare("observers_launch"),
+            "/config/communication_delay_compensator/communication_delay_compensator.param.yaml",
+        ],
+        "path to the parameter file of communication_delay_compensator. default is `CDOB`",
+    )
+
     # component
     add_launch_arg("use_intra_process", "false", "use ROS2 component container communication")
     add_launch_arg("use_multithread", "false", "use multithread")
@@ -106,7 +115,6 @@ def generate_launch_description():
         "component_container",
         condition=UnlessCondition(LaunchConfiguration("use_multithread")),
     )
-    
     set_container_mt_executable = SetLaunchConfiguration(
         "container_executable",
         "component_container_mt",
@@ -116,7 +124,7 @@ def generate_launch_description():
         launch_arguments
         + [
             set_container_executable,
-            # set_container_mt_executable,
+            set_container_mt_executable,
         ]
         + [OpaqueFunction(function=launch_setup)]
     )
