@@ -39,7 +39,7 @@ def launch_setup(context, *args, **kwargs):
     # lateral controller
     communication_delay_component = ComposableNode(
         package="communication_delay_compensator",
-        plugin="autoware::motion::control::observer::CommunicationDelayCompensatorNode",
+        plugin="observers::CommunicationDelayCompensatorNode",
         name="communication_delay_compensator_exe",
         namespace="observers",
         # remappings=[
@@ -63,7 +63,7 @@ def launch_setup(context, *args, **kwargs):
         package="rclcpp_components",
         executable=LaunchConfiguration("container_executable"),
         composable_node_descriptions=[communication_delay_component],
-        condition=LaunchConfigurationEquals("lateral_controller_mode", "mpc_follower"),
+        condition=LaunchConfigurationEquals("communication_delay_compensator_mode", "CDOB"),
     )
 
     # lateral controller is separated since it may be another controller (e.g. pure pursuit)
@@ -75,7 +75,9 @@ def launch_setup(context, *args, **kwargs):
 
     group = GroupAction(
         [
-            PushRosNamespace("control"),
+            PushRosNamespace(""),
+            communication_delay_container,
+            communication_delay_compensator_loader,
 
         ]
     )
@@ -106,7 +108,7 @@ def generate_launch_description():
         "component_container",
         condition=UnlessCondition(LaunchConfiguration("use_multithread")),
     )
-    
+
     set_container_mt_executable = SetLaunchConfiguration(
         "container_executable",
         "component_container_mt",
@@ -116,7 +118,7 @@ def generate_launch_description():
         launch_arguments
         + [
             set_container_executable,
-            # set_container_mt_executable,
+            set_container_mt_executable,
         ]
         + [OpaqueFunction(function=launch_setup)]
     )
