@@ -36,20 +36,18 @@ def launch_setup(context, *args, **kwargs):
     with open(communication_delay_compensator_path, "r") as f:
         communication_delay_compensator_param = yaml.safe_load(f)["/**"]["ros__parameters"]
 
-    # lateral controller
+    # Communication delay compensator component.
     communication_delay_component = ComposableNode(
         package="communication_delay_compensator",
         plugin="observers::CommunicationDelayCompensatorNode",
         name="communication_delay_compensator_exe",
         namespace="observers",
-        # remappings=[
-        #     ("~/input/reference_trajectory", "/planning/scenario_planning/trajectory"),
-        #     ("~/input/current_odometry", "/localization/kinematic_state"),
-        #     ("~/input/current_steering", "/vehicle/status/steering_status"),
-        #     ("~/output/control_cmd", "lateral/control_cmd"),
-        #     ("~/output/predicted_trajectory", "lateral/predicted_trajectory"),
-        #     ("~/output/diagnostic", "lateral/diagnostic"),
-        # ],
+        remappings=[
+            ("~/input/control_cmd", "/control/trajectory_follower/control_cmd"),
+            ("~/input/current_odometry", "/localization/kinematic_state"),
+            ("~/input/steering_state", "/vehicle/status/steering_status"),
+            ("~/output/communication_delay_compensation_refs", "observers/time_delay_compensator/delay_refs")
+        ],
         parameters=[
             communication_delay_compensator_param,
         ],
@@ -62,7 +60,7 @@ def launch_setup(context, *args, **kwargs):
         namespace="",
         package="rclcpp_components",
         executable=LaunchConfiguration("container_executable"),
-        composable_node_descriptions=[communication_delay_component],
+        composable_node_descriptions=[],
         condition=LaunchConfigurationEquals("communication_delay_compensator_mode", "CDOB"),
     )
 
@@ -75,7 +73,7 @@ def launch_setup(context, *args, **kwargs):
 
     group = GroupAction(
         [
-            PushRosNamespace(""),
+            PushRosNamespace("observers"),
             communication_delay_container,
             communication_delay_compensator_loader,
 
