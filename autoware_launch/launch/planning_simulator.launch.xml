@@ -68,20 +68,20 @@
     </group>
 
     <!-- Observers and Compensators -->
-    <group>
-        <include file="$(find-pkg-share observers_launch)/launch/communication_delay_compensator.launch.xml">
-            <!-- options for communication_delay_compensator_mode: CDOB, ... -->
-            <arg name="communication_delay_compensator_mode" value="CDOB"/>
-        </include>
-    </group>
-
     <!--    <group>-->
-    <!--        <include-->
-    <!--                file="$(find-pkg-share communication_delay_compensator)/launch/communication_delay_compensator.launch.xml">-->
+    <!--        <include file="$(find-pkg-share observers_launch)/launch/communication_delay_compensator.launch.xml">-->
     <!--            &lt;!&ndash; options for communication_delay_compensator_mode: CDOB, ... &ndash;&gt;-->
-    <!--            &lt;!&ndash;                <arg name="communication_delay_compensator_mode" value="CDOB"/>&ndash;&gt;-->
+    <!--            <arg name="communication_delay_compensator_mode" value="CDOB"/>-->
     <!--        </include>-->
     <!--    </group>-->
+
+    <group>
+        <include
+                file="$(find-pkg-share communication_delay_compensator)/launch/communication_delay_compensator.launch.xml">
+            <!-- options for communication_delay_compensator_mode: CDOB, ... -->
+            <!--                <arg name="communication_delay_compensator_mode" value="CDOB"/>-->
+        </include>
+    </group>
 
     <!-- Autoware API -->
     <group>

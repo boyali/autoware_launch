@@ -66,6 +66,7 @@ def launch_setup(context, *args, **kwargs):
             ("~/output/control_cmd", "lateral/control_cmd"),
             ("~/output/predicted_trajectory", "lateral/predicted_trajectory"),
             ("~/output/diagnostic", "lateral/diagnostic"),
+            ("~/output/lateral_controller_error_report", "lateral/lateral_controller_error_report"),
         ],
         parameters=[
             lat_controller_param,
