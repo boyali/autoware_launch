@@ -101,6 +101,7 @@ def launch_setup(context, *args, **kwargs):
             ("~/output/control_cmd", "longitudinal/control_cmd"),
             ("~/output/slope_angle", "longitudinal/slope_angle"),
             ("~/output/diagnostic", "longitudinal/diagnostic"),
+            ("~/output/longitudinal_controller_error_report", "longitudinal/longitudinal_controller_error_report"),
         ],
         parameters=[
             lon_controller_param,
