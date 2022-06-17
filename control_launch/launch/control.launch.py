@@ -63,7 +63,7 @@ def launch_setup(context, *args, **kwargs):
             ("~/input/reference_trajectory", "/planning/scenario_planning/trajectory"),
             ("~/input/current_odometry", "/localization/kinematic_state"),
             ("~/input/current_steering", "/vehicle/status/steering_status"),
-            ("~/input/current_com_delay", "observers/time_delay_compensator/delay_refs"),
+            ("~/input/current_com_delay", "/observers/time_delay_compensator/delay_refs"),
             ("~/output/control_cmd", "lateral/control_cmd"),
             ("~/output/predicted_trajectory", "lateral/predicted_trajectory"),
             ("~/output/diagnostic", "lateral/diagnostic"),
@@ -99,7 +99,7 @@ def launch_setup(context, *args, **kwargs):
         remappings=[
             ("~/input/current_trajectory", "/planning/scenario_planning/trajectory"),
             ("~/input/current_odometry", "/localization/kinematic_state"),
-            ("~/input/current_com_delay", "observers/time_delay_compensator/delay_refs"),
+            ("~/input/current_com_delay", "/observers/time_delay_compensator/delay_refs"),
             ("~/output/control_cmd", "longitudinal/control_cmd"),
             ("~/output/slope_angle", "longitudinal/slope_angle"),
             ("~/output/diagnostic", "longitudinal/diagnostic"),
