@@ -58,7 +58,7 @@
     stop_state_entry_target_speed: 0.001
 
     # Communication delay compensator options
-    use_communication_delay_compensator: false
+    use_communication_delay_compensator: true
 
     # vehicle parameters
     vehicle:
