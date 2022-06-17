@@ -46,6 +46,9 @@ def launch_setup(context, *args, **kwargs):
             ("~/input/control_cmd", "/control/trajectory_follower/control_cmd"),
             ("~/input/current_odometry", "/localization/kinematic_state"),
             ("~/input/steering_state", "/vehicle/status/steering_status"),
+            ("~/input/long_errors", "/control/trajectory_follower/longitudinal/longitudinal_controller_error_report"),
+            ("~/input/lat_errors", "/control/trajectory_follower/lateral/lateral_controller_error_report"),
+            ("~/input/cp_errors", "/control_performance/performance_vars"),
             ("~/output/communication_delay_compensation_refs", "observers/time_delay_compensator/delay_refs")
         ],
         parameters=[
