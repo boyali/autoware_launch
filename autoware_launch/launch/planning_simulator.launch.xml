@@ -82,9 +82,9 @@
             <!-- <arg name="communication_delay_compensator_mode" value="CDOB"/>-->
         </include>
 
-        <include
-                file="$(find-pkg-share control_performance_analysis)/launch/controller_performance_analysis.launch.xml">
-        </include>
+        <!--        <include-->
+        <!--                file="$(find-pkg-share control_performance_analysis)/launch/controller_performance_analysis.launch.xml">-->
+        <!--        </include>-->
     </group>
 
     <!-- Autoware API -->
