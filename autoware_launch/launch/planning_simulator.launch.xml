@@ -68,11 +68,11 @@
 	</group>
 
 	<!--	Nonlinear MPC-->
-	<!--	<group>-->
-	<!--		<include-->
-	<!--			file="$(find-pkg-share mpc_nonlinear)/launch/mpc_nonlinear.launch.xml">-->
-	<!--		</include>-->
-	<!--	</group>-->
+	<group>
+		<include
+			file="$(find-pkg-share mpc_nonlinear)/launch/mpc_nonlinear.launch.xml">
+		</include>
+	</group>
 
 
 	<!-- Observers and Compensators -->

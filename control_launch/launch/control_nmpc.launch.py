@@ -209,7 +209,7 @@ def launch_setup(context, *args, **kwargs):
         executable=LaunchConfiguration("container_executable"),
         composable_node_descriptions=[
             # controller_component,
-            mpc_nonlinear_component,
+            # mpc_nonlinear_component,
             lane_departure_component,
             shift_decider_component,
             vehicle_cmd_gate_component,
