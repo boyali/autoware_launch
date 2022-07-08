@@ -48,6 +48,10 @@ def launch_setup(context, *args, **kwargs):
     with open(lane_departure_checker_param_path, "r") as f:
         lane_departure_checker_param = yaml.safe_load(f)["/**"]["ros__parameters"]
 
+    mpc_nonlinar_path = LaunchConfiguration("mpc_nonlinear_param_path").perform(context)
+    with open(mpc_nonlinar_path, "r") as f:
+        mpc_nonlinear_param = yaml.safe_load(f)["/**"]["ros__parameters"]
+
     controller_component = ComposableNode(
         package="trajectory_follower_nodes",
         plugin="autoware::motion::control::trajectory_follower_nodes::Controller",
@@ -69,9 +73,26 @@ def launch_setup(context, *args, **kwargs):
                 "ctrl_period": 0.03,
                 "lateral_controller_mode": LaunchConfiguration("lateral_controller_mode"),
             },
-            lon_controller_param,
+            # lon_controller_param,
             lat_controller_param,
         ],
+        extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+    )
+
+    # mpc_nonlinear
+    mpc_nonlinear_component = ComposableNode(
+        package="mpc_nonlinear",
+        plugin="autoware::motion::control::trajectory_follower::NonlinearMPCNode",
+        name="mpc_nonlinear_node_exe",
+        namespace="trajectory_follower",
+        remappings=[
+            ("~/input/reference_trajectory", "/planning/scenario_planning/trajectory"),
+            ("~/input/current_steering", "/vehicle/status/steering_status"),
+            ("~/input/current_velocity", "/localization/kinematic_state"),
+            ("~/output/control_cmd", "control_cmd"),
+            ("~/output/predicted_trajectory", "lateral/predicted_trajectory"),
+        ],
+        parameters=[mpc_nonlinear_param],
         extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
     )
 
@@ -177,6 +198,10 @@ def launch_setup(context, *args, **kwargs):
         ],
     )
 
+    '''
+        Conditional Composable node description
+    '''
+
     container = ComposableNodeContainer(
         name="control_container",
         namespace="",
@@ -185,6 +210,7 @@ def launch_setup(context, *args, **kwargs):
         composable_node_descriptions=[
             controller_component,
             lane_departure_component,
+            mpc_nonlinear_component,
             shift_decider_component,
             vehicle_cmd_gate_component,
         ],
@@ -213,8 +239,8 @@ def generate_launch_description():
     # lateral controller mode
     add_launch_arg(
         "lateral_controller_mode",
-        "mpc_follower",
-        "lateral controller mode: `mpc_follower` or `pure_pursuit`",
+        "mpc_nonlinear",
+        "lateral controller mode: `mpc_follower` or  `mpc_nonlinear` or `pure_pursuit`",
     )
 
     # parameter file path
@@ -226,6 +252,16 @@ def generate_launch_description():
         ],
         "path to the parameter file of lateral controller. default is `mpc_follower`",
     )
+
+    add_launch_arg(
+        "mpc_nonlinear_param_path",
+        [
+            FindPackageShare("control_launch"),
+            "/config/trajectory_follower/mpc_nonlinear.param.yaml",
+        ],
+        "path to the parameter file of lateral controller. default is `mpc_nonlinear`",
+    )
+
     add_launch_arg(
         "lon_controller_param_path",
         [
@@ -258,6 +294,7 @@ def generate_launch_description():
     # component
     add_launch_arg("use_intra_process", "false", "use ROS2 component container communication")
     add_launch_arg("use_multithread", "false", "use multithread")
+
     set_container_executable = SetLaunchConfiguration(
         "container_executable",
         "component_container",

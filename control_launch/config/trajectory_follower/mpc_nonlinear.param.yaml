@@ -1,0 +1,113 @@
+/**:
+  ros__parameters:
+    # -- Control Algorithm Parameters --
+    control_frequency: 30.0          # Hertz
+    mpc_prediction_dt: 0.1           # prediction time step length [s]
+
+    # -- Vehicle Model Parameters --
+    steering_time_constant: 0.27  # [s]
+    speed_time_constant: 0.61    # [s]
+
+    # -- Simulation model for planning simulator --
+    use_mpc_controller: true    # if false it uses the feedback controllers.
+    use_delay_sim_model: true   # for DELAY_STEER planning simulator model. For debugging only.
+    input_delay_time: 0.24 # 0.3    # input dead-time [s]
+
+    # -- Use time or arc-length as the interpolation coordinates for predictions --
+    use_acceleration_inputs: true                 # if false, traj speeds are used in the simulations
+    use_linear_trajectory_initialization: true    # if false LPV feedback initialization is used.
+
+    # -- State and Control Weights.
+    # -- ['xw', 'yw', 'psi', 's', 'e_y', 'e_yaw', 'Vx', 'delta', 'ay'] --
+    # state_weights: [ 0.0, 0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 0.0, 0.0 ]     
+    # state_weights_terminal: [ 0.0, 0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 0.0, 0.0 ]
+
+    state_weights: [ 0.0, 0.0, 0.0, 0.0, 0.3, 0.1, 0.1, 0.0, 0.02 ]
+    state_weights_terminal: [ 0.0, 0.0, 0.0, 0.0, 0.3, 0.1, 0.2, 0.0, 0.02 ]
+    control_weights: [ 0.001, 0.001 ]    # [vx speed input, steering input]
+    jerk_weights: [ 0.5, 0.5 ]        # [acc and steering_rate]
+
+    #  -- Constraints - Upper-lower bounds. 
+    #  -- ['xw', 'yw', 'psi', 's', 'e_y', 'e_yaw', 'Vx', 'delta', 'ay'] --
+    # xlower: [ -.inf, -.inf, -.inf, -.inf, -3.0, -2.0, -0.5, -0.65, -.inf ]
+    xlower: [ -.inf, -.inf, -.inf, -.inf, -3.0, -1.0, 0.0, -0.65, -4.0 ]
+    xupper: [ .inf,  .inf,   .inf, .inf,  3.0,  1.0, 25.0, 0.65, 4.0 ]
+    ulower: [ -7., -1.0 ]  # vx speed input [m/s], steering input [rad]
+    uupper: [ 7.,  1.0 ]
+
+    # -- Scaling Mats ['xw', 'yw', 'psi', 's', 'e_y', 'e_yaw', 'Vx', 'delta', 'ay'] --
+    scaling_range: [ -1., 1. ]
+
+    xmin_for_scaling: [ -25., -25., -3.14, 0.0,  -3.0, -1.0, 0.0, -0.65, -5.0 ]
+    xmax_for_scaling: [ 25.,  25.,  3.14, 25.0,   3.0,  1.0, 10.0,   0.65, 5.0 ]
+
+    umin_for_scaling: [ -7., -1.0 ]  # ax speed input [m/s], steering input [rad]
+    umax_for_scaling: [ 7.,  1.0 ]
+
+    # OSQP Options.
+    osqp_warm_start: true
+    osqp_polishing: true
+    osqp_scaling: true
+    osqp_max_iters: 100
+    osqp_polish_iters: 5
+    osqp_time_limit: 0.02 # seconds - currently disabled
+    osqp_eps_abs: 0.0001
+    osqp_eps_rel: 0.0001
+    osqp_verbose: false     # outputs iteration results.
+    osqp_scaled_termination: false
+
+    # -- Lyapunov Matrices for LPV Initialization - Delay steering --
+    # -- Error states are : [ey, eyaw, V, steering]
+    num_of_nonlinearities: 5  # Number of nonlinearities in the state transition matrix.
+    Xn1: [ 0.00022939252340344277, -0.00016388059639495272, 0.0003435391448938799, 5.968610271814269e-07, -0.00016388059639495272, 7.140848027562311e-05, -2.5071803545046526e-05, -1.9008520785496222e-07, 0.0003435391448938799, -2.5071803545046526e-05, -0.0008464141742379514, -9.82656244677017e-07, 5.968610271814269e-07, -1.9008520785496222e-07, -9.82656244677017e-07, -7.261397770766167e-08 ]
+    Xn2: [ 0.022124379324507174, -0.01235298145272838, 0.010392045504021777, 5.751820856575064e-05, -0.01235298145272838, 0.0046619384320634675, -0.0033456906123066716, -3.9915129949349126e-05, 0.010392045504021777, -0.0033456906123066716, 0.002758086698464065, 4.6652736869424236e-05, 5.751820856575064e-05, -3.9915129949349126e-05, 4.6652736869424236e-05, -2.472224721796733e-06 ]
+    Xn3: [ 5.471546394767016e-05, -9.275609705537719e-06, 5.0870399370765177e-05, 2.4694358530523705e-07, -9.275609705537719e-06, -0.00014635689776293321, 0.0006411378272900743, -5.591002514364616e-07, 5.0870399370765177e-05, 0.0006411378272900743, -0.002328240548638887, 2.6728855986911254e-06, 2.4694358530523705e-07, -5.591002514364616e-07, 2.6728855986911254e-06, 1.3131994902871483e-07 ]
+    Xn4: [ 9.347586999445037e-06, -1.3707891433259624e-05, 5.47448736823863e-05, 2.0631025579315673e-08, -1.3707891433259624e-05, 2.319125398279452e-05, -9.244971685532103e-05, 3.229857641444812e-08, 5.47448736823863e-05, -9.244971685532103e-05, 0.000284958826285573, -3.718712270321353e-07, 2.0631025579315673e-08, 3.229857641444812e-08, -3.718712270321353e-07, -3.312115688679134e-08 ]
+    Xn5: [ 0.10465912342957756, -0.021880729651141944, 0.004308420313269742, -7.148052943018846e-05, -0.021880729651141944, 0.013297975599359819, -0.012966173826687986, -4.436508860475952e-05, 0.004308420313269742, -0.012966173826687986, 0.036668124189257176, 2.8255446192914935e-05, -7.148052943018846e-05, -4.436508860475952e-05, 2.8255446192914935e-05, 0.05564439076474937 ]
+    Yn1: [ 0.002530047804570356, -6.427882302033153e-06, -0.0025379906053875187, 1.1998546774008156e-05, 0.005687258805631681, -1.5502113943085813e-05, -1.7706214920511905e-05, 7.409657115522926e-10 ]
+    Yn2: [ -0.00012276412807841949, -1.3513368546872597e-05, 0.0002849592168283375, 1.1703632169996927e-05, -0.002501879968605394, -1.4436118201375673e-05, 0.00018470753914628612, 4.059220325424452e-07 ]
+    Yn3: [ -2.3225757413584717e-05, -1.0092868593035066e-06, -3.477989360762504e-05, 8.138121635788586e-07, -0.00013015336535737704, -4.878534806227783e-07, 9.63475687297728e-06, 3.7024053561978894e-09 ]
+    Yn4: [ -0.0038268766572269837, 1.0850402629930436e-05, 0.00564521342745802, -1.9373319988655553e-05, -0.008484206786304094, 2.491120277750201e-05, 3.3333243134560303e-05, 7.899235924657952e-09 ]
+    Yn5: [ -8.64458480148382e-05, 4.832602703092395e-07, 0.00020578182983827244, 1.190896043943247e-07, -0.04530910797461954, 3.0332289791652805e-07, 8.835046451342512e-06, -0.009823478357778304 ]
+
+    # -- Stopping Condition Parameters --
+    stop_state_entry_ego_speed: 0.2
+    stop_state_entry_target_speed: 0.5
+    stop_state_keep_stopping_dist: 0.5
+    will_stop_state_dist: 1.0 # is used to get if vehicle is approaching to stopping point
+
+    # -- Accuracy parameters --
+    number_of_sqp_iterations: 1
+
+    # -- Kalman filter parameters for error model states [e_y, e_yaw[rad], v, steering [deg]] --
+    # -- UKF specific parameters --
+    alpha: 0.01  # controls spread of the sigma points,
+    beta: 2.0   # for Gaussian distribution,
+    kappa: 0.0  # scale the sigma points further from x_mean.
+
+    #  -- ['xw', 'yw', 'psi', 's', 'e_y', 'e_yaw', 'Vx', 'delta', 'ay'] --
+    use_kalman: true
+    Pkalman: [ 0.1, 0.1, 0.08, 0.3, 0.15, 0.07, 0.1, 0.07, 0.2 ]       # Kalman estimate uncertainty variance estimate.
+    Vprocess: [ 0.2, 0.2, 0.05, 0.1, 0.02, 0.01, 0.05, 0.03, 0.1 ]     # process [model] uncertainty variance estimate.
+    Wmeasurement: [ 0.4, 0.4, 0.06, 0.2,  0.15, 0.1, 0.1, 0.02, 0.2 ]  # measurement uncertainty variance estimate
+
+    cog_rear_lr: 0.0                # distance of rear axle center to COG [m]
+
+    # -- Speed tracking PI control I-integrator saturation limits
+    feedforward_speed_set_point_scale: 1.0 # Scale the reference longitudinal speed.
+
+    # use lateral control time delay compensator?
+    use_lat_cdob: true  # for activating communication delay observer compensation algorithm
+    use_lat_dob: true   # for activating double disturbance observer algorithm
+
+    use_long_cdob: true  # for activating communication delay observer compensation algorithm
+    use_long_dob: true   # for activating double disturbance observer algorithm
+
+    # CDOB - DOB parameters
+    cdob_lat_cont_order: 1
+    cdob_lat_cont_frq: 10.
+    cdob_lat_cont_damping: 10.
+
+    dob_lat_cont_order: 2
+    dob_lat_cont_frq: 2.
+    dob_lat_cont_damping: 5.
