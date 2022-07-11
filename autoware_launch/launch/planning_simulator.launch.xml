@@ -83,11 +83,11 @@
 	<!--        </include>-->
 	<!--    </group>-->
 
-	<!--    <group>-->
-	<!--        <include-->
-	<!--                file="$(find-pkg-share communication_delay_compensator)/launch/communication_delay_compensator.launch.xml">-->
-	<!--        </include>-->
-	<!--    </group>-->
+	<group>
+		<include
+			file="$(find-pkg-share communication_delay_compensator)/launch/communication_delay_compensator.launch.xml">
+		</include>
+	</group>
 
 	<!-- Autoware API -->
 	<group>
