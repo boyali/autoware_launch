@@ -275,8 +275,8 @@ def launch_setup(context, *args, **kwargs):
             pure_pursuit_container,
             external_cmd_selector_loader,
             external_cmd_converter_loader,
-            mpc_follower_loader,
-            pure_pursuit_loader,
+            # mpc_follower_loader,
+            # pure_pursuit_loader,
         ]
     )
 
