@@ -234,8 +234,8 @@ def launch_setup(context, *args, **kwargs):
         package="rclcpp_components",
         executable=LaunchConfiguration("container_executable"),
         composable_node_descriptions=[
-            lon_controller_component,
-            latlon_muxer_component,
+            # lon_controller_component,
+            # latlon_muxer_component,
             lane_departure_component,
             shift_decider_component,
             vehicle_cmd_gate_component,
@@ -248,8 +248,8 @@ def launch_setup(context, *args, **kwargs):
         package="rclcpp_components",
         executable=LaunchConfiguration("container_executable"),
         composable_node_descriptions=[
-            lon_controller_component,
-            latlon_muxer_component,
+            # lon_controller_component,
+            # latlon_muxer_component,
             shift_decider_component,
             vehicle_cmd_gate_component,
         ],

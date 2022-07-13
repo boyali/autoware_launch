@@ -56,6 +56,17 @@
     <arg name="use_multithread" value="true" />
   </include>
 
+<!--    Nonlinear MPC-->
+<group>
+  <include file="$(find-pkg-share mpc_nonlinear)/launch/mpc_nonlinear.launch.xml">
+  </include>
+</group>
+<group>
+  <include file="$(find-pkg-share communication_delay_compensator)/launch/communication_delay_compensator.launch.xml">
+  </include>
+</group>
+
+
   <!-- Autoware API -->
   <include file="$(find-pkg-share autoware_api_launch)/launch/autoware_api.launch.xml">
     <arg name="init_simulator_pose" value="true"/>
