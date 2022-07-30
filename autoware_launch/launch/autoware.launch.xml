@@ -81,6 +81,8 @@
         <include file="$(find-pkg-share mpc_nonlinear)/launch/mpc_nonlinear.launch.xml">
         </include>
     </group>
+
+    <!-- Communication Time-Delay Compensator -->
     <group>
         <include
                 file="$(find-pkg-share communication_delay_compensator)/launch/communication_delay_compensator.launch.xml">
