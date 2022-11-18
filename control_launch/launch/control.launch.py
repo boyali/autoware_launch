@@ -34,23 +34,21 @@ def launch_setup(context, *args, **kwargs):
     lat_controller_param_path = LaunchConfiguration("lat_controller_param_path").perform(context)
     with open(lat_controller_param_path, "r") as f:
         lat_controller_param = yaml.safe_load(f)["/**"]["ros__parameters"]
+
     lon_controller_param_path = LaunchConfiguration("lon_controller_param_path").perform(context)
     with open(lon_controller_param_path, "r") as f:
         lon_controller_param = yaml.safe_load(f)["/**"]["ros__parameters"]
-    vehicle_cmd_gate_param_path = LaunchConfiguration("vehicle_cmd_gate_param_path").perform(
-        context
-    )
+
+    vehicle_cmd_gate_param_path = LaunchConfiguration("vehicle_cmd_gate_param_path").perform(context)
     with open(vehicle_cmd_gate_param_path, "r") as f:
         vehicle_cmd_gate_param = yaml.safe_load(f)["/**"]["ros__parameters"]
-    lane_departure_checker_param_path = LaunchConfiguration(
-        "lane_departure_checker_param_path"
-    ).perform(context)
+
+    lane_departure_checker_param_path = LaunchConfiguration("lane_departure_checker_param_path").perform(context)
     with open(lane_departure_checker_param_path, "r") as f:
         lane_departure_checker_param = yaml.safe_load(f)["/**"]["ros__parameters"]
 
     operation_mode_transition_manager_param_path = LaunchConfiguration(
-        "operation_mode_transition_manager_param_path"
-    ).perform(context)
+        "operation_mode_transition_manager_param_path").perform(context)
     with open(operation_mode_transition_manager_param_path, "r") as f:
         operation_mode_transition_manager_param = yaml.safe_load(f)["/**"]["ros__parameters"]
 
@@ -245,8 +243,8 @@ def generate_launch_description():
     # lateral controller mode
     add_launch_arg(
         "lateral_controller_mode",
-        "mpc_follower",
-        "lateral controller mode: `mpc_follower` or `pure_pursuit`",
+        "sysid",
+        "lateral controller mode: `mpc_follower` or `pure_pursuit` or `sysid`",
     )
 
     # parameter file path
