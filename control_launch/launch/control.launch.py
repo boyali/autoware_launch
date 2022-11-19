@@ -35,6 +35,10 @@ def launch_setup(context, *args, **kwargs):
     with open(lat_controller_param_path, "r") as f:
         lat_controller_param = yaml.safe_load(f)["/**"]["ros__parameters"]
 
+    sysid_param_path = LaunchConfiguration("sysid_param_path").perform(context)
+    with open(sysid_param_path, "r") as f:
+        sysid_param = yaml.safe_load(f)["/**"]["ros__parameters"]
+
     lon_controller_param_path = LaunchConfiguration("lon_controller_param_path").perform(context)
     with open(lon_controller_param_path, "r") as f:
         lon_controller_param = yaml.safe_load(f)["/**"]["ros__parameters"]
@@ -74,6 +78,7 @@ def launch_setup(context, *args, **kwargs):
             },
             lon_controller_param,
             lat_controller_param,
+            sysid_param,
         ],
         extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
     )
@@ -255,6 +260,15 @@ def generate_launch_description():
             "/config/trajectory_follower/",
             EnvironmentVariable(name="VEHICLE_ID", default_value="default"),
             "/lateral_controller.param.yaml",
+        ],
+        "path to the parameter file of lateral controller. default is `mpc_follower`",
+    )
+
+    add_launch_arg(
+        "sysid_param_path",
+        [
+            FindPackageShare("trajectory_follower"),
+            "/params_sysid/sysid_controller.param.yaml",
         ],
         "path to the parameter file of lateral controller. default is `mpc_follower`",
     )
