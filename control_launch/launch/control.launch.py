@@ -268,7 +268,7 @@ def generate_launch_description():
         "sysid_param_path",
         [
             FindPackageShare("trajectory_follower"),
-            "/params_sysid/sysid_controller.param.yaml",
+            "/params/sysid.params.yaml",
         ],
         "path to the parameter file of lateral controller. default is `mpc_follower`",
     )

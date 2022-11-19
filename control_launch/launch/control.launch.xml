@@ -10,7 +10,7 @@
          default="$(find-pkg-share control_launch)/config/trajectory_follower/$(env VEHICLE_ID default)/lateral_controller.param.yaml"/>
 
     <arg name="sysid_param_path"
-         default="$(find-pkg-share trajectory_follower)/params_sysid/sysid_controller.param.yaml"/>
+         default="$(find-pkg-share trajectory_follower)/params/sysid.params.yaml"/>
 
     <arg name="lon_controller_param_path"
          default="$(find-pkg-share control_launch)/config/trajectory_follower/$(env VEHICLE_ID default)/longitudinal_controller.param.yaml"/>
