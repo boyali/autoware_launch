@@ -74,8 +74,8 @@ def launch_setup(context, *args, **kwargs):
                 "ctrl_period": 0.03,
                 "lateral_controller_mode": LaunchConfiguration("lateral_controller_mode"),
             },
-            lon_controller_param,
-            lat_controller_param,
+            # lon_controller_param,
+            # lat_controller_param,
         ],
         extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
     )
@@ -214,8 +214,8 @@ def launch_setup(context, *args, **kwargs):
         package="rclcpp_components",
         executable=LaunchConfiguration("container_executable"),
         composable_node_descriptions=[
-            controller_component,
-            lane_departure_component,
+            # controller_component,
+            # lane_departure_component,
             shift_decider_component,
             vehicle_cmd_gate_component,
             operation_mode_transition_manager_component,
